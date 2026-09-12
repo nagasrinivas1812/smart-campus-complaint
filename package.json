@@ -1,0 +1,14 @@
+{
+  "name": "campus-complaint-system",
+  "version": "1.0.0",
+  "description": "Smart Campus Complaint Management System",
+  "scripts": {
+    "start": "cd backend && npm start",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build"
+  },
+  "keywords": ["campus", "complaints", "react", "express", "mongodb"],
+  "author": "",
+  "license": "ISC"
+}

@@ -5,7 +5,7 @@ const http = require('http');
 const socketIo = require('socket.io');
 const path = require('path');
 
-// Load environment variables
+// Load environment variables from .env
 dotenv.config();
 
 // Connect to database

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
 import { admin } from '../api';
+import { socket } from '../socket';
 
 export default function AdminDashboard() {
   const [complaints, setComplaints] = useState([]);
@@ -16,7 +17,23 @@ export default function AdminDashboard() {
     } catch (e) { console.error(e); }
   };
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+
+    // Real-time: new complaint submitted by any student
+    const handleRefresh = () => load();
+    socket.on('new_complaint', handleRefresh);
+    socket.on('complaint_list_updated', handleRefresh);
+
+    // Polling fallback every 15 seconds for reliability
+    const interval = setInterval(load, 15000);
+
+    return () => {
+      socket.off('new_complaint', handleRefresh);
+      socket.off('complaint_list_updated', handleRefresh);
+      clearInterval(interval);
+    };
+  }, []);
 
   useEffect(() => {
     if (chartInstance.current) chartInstance.current.destroy();

@@ -1,39 +1,109 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Header from './components/Header.jsx';
-import LoginModal from './components/LoginModal.jsx';
-import RegisterModal from './components/RegisterModal.jsx';
+import AuthCard from './components/AuthCard.jsx';
 import StudentDashboard from './components/StudentDashboard.jsx';
 import AdminDashboard from './components/AdminDashboard.jsx';
+import { auth } from './api.js';
+import { connectSocket, disconnectSocket } from './socket.js';
 
 export default function App() {
-  const [user, setUser] = useState(() => { const t = localStorage.getItem('campus_token'); return t ? { token: t } : null; });
-  const [showLogin, setShowLogin] = useState(false);
-  const [showRegister, setShowRegister] = useState(false);
-  const [role, setRole] = useState('student');
+  const [user, setUser] = useState(() => {
+    try {
+      const savedUser = localStorage.getItem('campus_user');
+      const savedToken = localStorage.getItem('campus_token');
+      return (savedUser && savedToken) ? { token: savedToken, ...JSON.parse(savedUser) } : null;
+    } catch {
+      return null;
+    }
+  });
+  const [loading, setLoading] = useState(true);
+
+  // Push a history entry when user is logged in so browser back-button
+  // pops back to the dashboard instead of leaving the app
+  useEffect(() => {
+    if (user && user.name) {
+      // Push a "dashboard" state so back-swipe pops here, not out of the app
+      window.history.pushState({ page: 'dashboard' }, '', window.location.href);
+    }
+  }, [user?.name]);
+
+  // Intercept the browser back button — keep user inside the app
+  useEffect(() => {
+    const handlePopState = (e) => {
+      if (user && user.name) {
+        // Re-push the state to prevent leaving
+        window.history.pushState({ page: 'dashboard' }, '', window.location.href);
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [user]);
+
+  // Verify session on page load & reconnect socket
+  useEffect(() => {
+    const verifySession = async () => {
+      const token = localStorage.getItem('campus_token');
+      if (!token) {
+        setLoading(false);
+        return;
+      }
+      try {
+        const res = await auth.me();
+        if (res.success && res.user) {
+          const fullUser = { token, ...res.user };
+          setUser(fullUser);
+          localStorage.setItem('campus_user', JSON.stringify(res.user));
+          // Re-connect socket with token after reload
+          connectSocket(token);
+        }
+      } catch (err) {
+        console.warn('Session verification failed:', err.message);
+        localStorage.removeItem('campus_token');
+        localStorage.removeItem('campus_user');
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    verifySession();
+
+    return () => disconnectSocket();
+  }, []);
 
   const handleLogin = (data) => {
     localStorage.setItem('campus_token', data.token);
+    localStorage.setItem('campus_user', JSON.stringify(data.user));
     setUser({ token: data.token, ...data.user });
-    setShowLogin(false);
+    // Connect socket immediately after login
+    connectSocket(data.token);
   };
 
   const logout = () => {
     localStorage.removeItem('campus_token');
+    localStorage.removeItem('campus_user');
+    disconnectSocket();
     setUser(null);
   };
+
+  if (loading && !user) {
+    return (
+      <>
+        <Header user={null} />
+        <div style={{ textAlign: 'center', padding: '60px', color: 'white' }}>
+          <i className="fas fa-circle-notch fa-spin" style={{ fontSize: '2rem', marginBottom: '16px', display: 'block' }}></i>
+          <h2>Loading Smart Campus...</h2>
+        </div>
+      </>
+    );
+  }
 
   if (!user || !user.name) {
     return (
       <>
         <Header user={null} />
-        <div className="role-selector">
-          <button className={"role-btn" + (role === 'student' ? ' active' : '')} onClick={() => setRole('student')}> Student Login</button>
-          <button className={"role-btn" + (role === 'admin' ? ' active' : '')} onClick={() => setRole('admin')}> Admin Login</button>
-          <button className="login-action-btn" onClick={() => { setShowLogin(true); setShowRegister(false); }}>Login</button>
-          <button className="login-action-btn" onClick={() => { setShowRegister(true); setShowLogin(false); }}>Register</button>
-        </div>
-        <LoginModal show={showLogin} role={role} onClose={() => setShowLogin(false)} onLogin={handleLogin} switchToRegister={() => setShowRegister(true)} />
-        <RegisterModal show={showRegister} role={role} onClose={() => setShowRegister(false)} switchToLogin={() => setShowLogin(true)} />
+        <AuthCard onLogin={handleLogin} />
+        <footer> Smart Campus — Complaint Management | Real-time Notifications & Analytics</footer>
       </>
     );
   }

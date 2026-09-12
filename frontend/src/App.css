@@ -108,3 +108,237 @@ hr { margin: 20px 0; border-color: #e9eef3; }
 .empty-state i { margin-bottom: 10px; color: #cbd5e1; }
 
 footer { margin-top: 40px; text-align: center; font-size: 0.75rem; color: rgba(255,255,255,0.8); padding: 16px; }
+
+/* =====================================================
+   Frosted Glass Authentication Window & Transitions
+   ===================================================== */
+.glass-auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0 40px;
+  width: 100%;
+}
+
+.glass-auth-card {
+  width: 100%;
+  max-width: 480px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: 32px;
+  padding: 36px 32px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(255, 255, 255, 0.4);
+  transition: max-width 0.3s ease;
+}
+
+/* Role Switch Segmented Slider */
+.role-switch-container {
+  position: relative;
+  display: flex;
+  background: rgba(0, 0, 0, 0.06);
+  backdrop-filter: blur(8px);
+  border-radius: 60px;
+  padding: 5px;
+  margin-bottom: 26px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.role-switch-slider {
+  position: absolute;
+  top: 5px;
+  bottom: 5px;
+  left: 5px;
+  width: calc(50% - 5px);
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  border-radius: 50px;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 14px rgba(42, 82, 152, 0.35);
+}
+
+.role-switch-slider.slide-student {
+  transform: translateX(0%);
+}
+
+.role-switch-slider.slide-admin {
+  transform: translateX(100%);
+}
+
+.role-switch-btn {
+  flex: 1;
+  position: relative;
+  z-index: 2;
+  border: none;
+  background: transparent;
+  padding: 12px 16px;
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: #4a5568;
+  cursor: pointer;
+  border-radius: 50px;
+  transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.role-switch-btn.active {
+  color: #ffffff;
+}
+
+/* Swipe Content Animations */
+.auth-swipe-content {
+  overflow: hidden;
+}
+
+@keyframes swipeInRight {
+  0% {
+    opacity: 0;
+    transform: translateX(28px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes swipeInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-28px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.swipe-from-right {
+  animation: swipeInRight 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.swipe-from-left {
+  animation: swipeInLeft 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* Card Header */
+.auth-card-header {
+  margin-bottom: 22px;
+  text-align: center;
+}
+
+.role-indicator-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(42, 82, 152, 0.1);
+  color: #2a5298;
+  padding: 4px 14px;
+  border-radius: 30px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+
+.auth-card-header h2 {
+  font-size: 1.55rem;
+  color: #1e293b;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.auth-subtitle {
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+/* Form Elements */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-form .form-group {
+  margin-bottom: 18px;
+}
+
+.auth-form label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 7px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.auth-form label i {
+  color: #2a5298;
+  font-size: 0.85rem;
+}
+
+.auth-form input {
+  width: 100%;
+  padding: 13px 16px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1.5px solid #dce4ec;
+  border-radius: 18px;
+  font-size: 0.92rem;
+  color: #1e293b;
+  transition: all 0.2s ease;
+}
+
+.auth-form input:focus {
+  outline: none;
+  background: #ffffff;
+  border-color: #2a5298;
+  box-shadow: 0 0 0 4px rgba(42, 82, 152, 0.12);
+}
+
+.form-row {
+  display: flex;
+  gap: 14px;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.auth-submit-btn {
+  margin-top: 8px;
+  padding: 14px;
+  font-size: 1rem;
+  letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.auth-card-footer {
+  margin-top: 22px;
+  text-align: center;
+  font-size: 0.88rem;
+  color: #64748b;
+}
+
+.link-btn-highlight {
+  background: none;
+  border: none;
+  color: #2a5298;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 0.88rem;
+  text-decoration: underline;
+  transition: color 0.2s;
+  padding: 0;
+  margin-left: 4px;
+}
+
+.link-btn-highlight:hover {
+  color: #1e3c72;
+}

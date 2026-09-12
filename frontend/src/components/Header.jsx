@@ -1,5 +1,14 @@
+import { useState, useEffect } from 'react';
+
 export default function Header({ user, onLogout }) {
-  const now = new Date();
+  const [now, setNow] = useState(new Date());
+
+  // Tick every second to keep the clock live
+  useEffect(() => {
+    const timer = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(timer); // cleanup on unmount
+  }, []);
+
   const date = now.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
   const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
 

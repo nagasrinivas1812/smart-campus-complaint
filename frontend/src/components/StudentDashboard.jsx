@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { complaints } from '../api';
+import { socket } from '../socket';
 
 export default function StudentDashboard({ user }) {
   const [list, setList] = useState([]);
@@ -12,7 +13,36 @@ export default function StudentDashboard({ user }) {
     } catch (e) { console.error(e); }
   };
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+
+    const userId = user?.id || user?._id;
+
+    // Join this user's private socket room for targeted notifications
+    const joinRoom = () => {
+      if (userId) socket.emit('join', userId);
+    };
+
+    // If already connected, join immediately; otherwise wait for connect event
+    if (socket.connected) {
+      joinRoom();
+    } else {
+      socket.on('connect', joinRoom);
+    }
+
+    // Real-time: status updated on THIS student's complaint
+    const onStatusUpdated = () => load();
+    socket.on('complaint_status_updated', onStatusUpdated);
+
+    // Real-time: poll fallback every 15 seconds for reliability
+    const interval = setInterval(load, 15000);
+
+    return () => {
+      socket.off('connect', joinRoom);
+      socket.off('complaint_status_updated', onStatusUpdated);
+      clearInterval(interval);
+    };
+  }, [user]);
 
   const submit = async () => {
     if (!form.title || !form.category) { alert('Please fill Title and Category'); return; }

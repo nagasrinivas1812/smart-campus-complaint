@@ -108,6 +108,19 @@ router.put(
 
             console.log(`Notification: Complaint ${complaint.id} status changed from ${oldStatus} to ${newStatus}`);
 
+            const io = req.app.get('io');
+            if (io) {
+                io.to(`user_${complaint.student}`).emit('complaint_status_updated', {
+                    complaintId: complaint._id,
+                    title: complaint.title,
+                    oldStatus,
+                    newStatus,
+                    remark: remark,
+                    updatedAt: complaint.updatedAt,
+                });
+                io.emit('complaint_list_updated', { complaintId: complaint._id, status: newStatus });
+            }
+
             res.status(200).json({
                 success: true,
                 data: complaint,
@@ -162,7 +175,7 @@ router.get('/analytics', async (req, res) => {
         }
 
         const totalStudents = await User.countDocuments({ role: 'student' });
-        const activeStudents = await Complaint.distinct('student').countDocuments();
+        const activeStudents = (await Complaint.distinct('student')).length;
         const totalComplaints = await Complaint.countDocuments();
         const resolvedCount = await Complaint.countDocuments({ status: 'Resolved' });
         const resolvedRate = totalComplaints > 0 ? (resolvedCount / totalComplaints * 100).toFixed(1) : 0;

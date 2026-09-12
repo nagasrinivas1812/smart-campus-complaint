@@ -43,6 +43,11 @@ router.post(
                 ],
             });
 
+            const io = req.app.get('io');
+            if (io) {
+                io.emit('new_complaint', complaint);
+            }
+
             res.status(201).json({
                 success: true,
                 data: complaint,
