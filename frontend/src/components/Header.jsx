@@ -38,13 +38,13 @@ export default function Header({ user, onLogout, theme, onToggleTheme, onOpenSet
         {user && (
           <div className="user-info">
             <span className="user-name-clickable" onClick={onOpenSettings} title="Click to view Profile Settings">
-              <i className="fas fa-user-circle"></i> {user.name}
+              <i className="fas fa-user-circle"></i> <span className="user-name-text">{user.name}</span>
             </span>
             <span className={`role-badge ${user.role === 'admin' ? 'badge-admin' : 'badge-student'}`}>
               {user.role === 'student' ? 'Student' : 'Admin'}
             </span>
             <button className="settings-btn" onClick={onOpenSettings} title="Profile & Settings">
-              <i className="fas fa-cog"></i> Settings
+              <i className="fas fa-cog"></i> <span className="settings-btn-text">Settings</span>
             </button>
             <button className="logout-btn" onClick={onLogout} title="Logout">
               <i className="fas fa-sign-out-alt"></i>

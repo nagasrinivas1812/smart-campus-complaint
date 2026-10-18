@@ -1393,3 +1393,443 @@ footer {
   color: rgba(255, 255, 255, 0.75);
   padding: 16px;
 }
+
+/* ========================================================
+   COMPREHENSIVE RESPONSIVE DESIGN (Laptops, Tablets, Mobiles)
+   ======================================================== */
+
+/* 1. TABLETS & SMALL LAPTOPS (<= 1024px) */
+@media (max-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .header {
+    padding: 14px 20px;
+    border-radius: 22px;
+  }
+}
+
+/* 2. TABLETS & LARGE PHONES (<= 768px) */
+@media (max-width: 768px) {
+  body {
+    padding: 12px 10px;
+  }
+
+  /* Prevent auto-zooming on iOS and Android input focus */
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+
+  .header {
+    padding: 12px 16px;
+    gap: 12px;
+    border-radius: 20px;
+  }
+
+  .logo-text h1 {
+    font-size: 1.25rem;
+  }
+
+  .analytics-row {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .card {
+    padding: 18px 16px;
+    border-radius: 22px;
+  }
+
+  .card-title {
+    font-size: 1.2rem;
+  }
+}
+
+/* 3. MOBILE PHONES (<= 640px) */
+@media (max-width: 640px) {
+  body {
+    padding: 8px 6px;
+  }
+
+  /* Header Mobile Layout */
+  .header {
+    padding: 12px 14px;
+    border-radius: 18px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .school-logo {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .logo-text h1 {
+    font-size: 1.1rem;
+    line-height: 1.2;
+  }
+
+  .logo-text p {
+    font-size: 0.68rem;
+  }
+
+  .date-time {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 12px;
+    width: 100%;
+    text-align: left;
+  }
+
+  .date-time .date {
+    font-size: 0.72rem;
+  }
+
+  .date-time .time {
+    font-size: 0.88rem;
+  }
+
+  .header-right {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .user-info {
+    flex: 1;
+    justify-content: space-between;
+    padding: 4px 10px;
+    gap: 6px;
+    border-radius: 30px;
+  }
+
+  .user-name-text {
+    max-width: 90px;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: bottom;
+  }
+
+  .settings-btn-text {
+    display: none;
+  }
+
+  .settings-btn {
+    padding: 6px 10px;
+  }
+
+  .role-badge {
+    padding: 3px 8px;
+    font-size: 0.68rem;
+  }
+
+  /* Role Selector on Login Landing Page */
+  .role-selector {
+    width: 100%;
+    max-width: 380px;
+    flex-direction: column;
+    border-radius: 20px;
+    padding: 10px;
+    gap: 8px;
+    margin: 16px auto;
+  }
+
+  .role-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 10px 16px;
+    font-size: 0.88rem;
+  }
+
+  .login-action-btn {
+    width: 100%;
+    text-align: center;
+    padding: 11px 18px;
+  }
+
+  /* Cards on Mobile */
+  .card {
+    padding: 14px 12px;
+    border-radius: 18px;
+  }
+
+  .card-title {
+    font-size: 1.1rem;
+    gap: 8px;
+  }
+
+  .card-sub {
+    font-size: 0.76rem;
+    margin-bottom: 12px;
+    padding-left: 8px;
+  }
+
+  .card-header-row {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Task Separation Tabs - Smooth horizontal scrolling on phones */
+  .task-filter-tabs {
+    padding: 4px;
+    gap: 5px;
+    border-radius: 14px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .task-filter-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tab-pill {
+    padding: 6px 10px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    gap: 5px;
+  }
+
+  .tab-pill-badge {
+    padding: 1px 6px;
+    font-size: 0.68rem;
+  }
+
+  /* Search & Filter Controls */
+  .task-filter-controls {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .search-input-wrap {
+    width: 100%;
+    min-width: 100%;
+  }
+
+  .category-filter-select {
+    width: 100%;
+  }
+
+  /* Complaint Cards on Mobile */
+  .complaint-item {
+    padding: 12px 10px;
+    border-radius: 16px;
+    margin-bottom: 10px;
+  }
+
+  .complaint-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .complaint-title-group {
+    width: 100%;
+    font-size: 0.88rem;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .complaint-meta {
+    font-size: 0.72rem;
+    gap: 6px 10px;
+  }
+
+  .complaint-desc {
+    font-size: 0.82rem;
+  }
+
+  /* Admin Actions on Mobile */
+  .admin-actions {
+    gap: 8px;
+    padding-top: 10px;
+  }
+
+  .action-control-group {
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .status-select-wrap {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .status-dropdown {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .quick-status-actions {
+    width: 100%;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .quick-status-btn {
+    flex: 1;
+    justify-content: center;
+    padding: 7px 10px;
+    font-size: 0.72rem;
+    min-width: 85px;
+  }
+
+  .remark-input-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .note-send-btn {
+    width: 100% !important;
+    justify-content: center;
+    padding: 9px 16px !important;
+  }
+
+  /* Media Evidence on Mobile */
+  .media-preview-container {
+    padding: 10px;
+    border-radius: 14px;
+  }
+
+  .media-preview-img {
+    max-height: 180px;
+  }
+
+  .media-preview-video {
+    max-height: 190px;
+  }
+
+  .complaint-media-card {
+    padding: 8px 10px;
+    border-radius: 12px;
+  }
+
+  .complaint-thumb-img {
+    max-height: 140px;
+  }
+
+  .complaint-video-player {
+    max-height: 180px;
+  }
+
+  /* Lightbox Modal on Mobile */
+  .lightbox-content {
+    width: 96%;
+    max-height: 94vh;
+    border-radius: 16px;
+  }
+
+  .lightbox-header {
+    padding: 10px 14px;
+    font-size: 0.84rem;
+  }
+
+  .lightbox-body {
+    padding: 8px;
+    max-height: 78vh;
+  }
+
+  /* Modals on Mobile */
+  .modal-content {
+    width: 96%;
+    max-width: 96%;
+    margin: 8px auto;
+    max-height: 94vh;
+    border-radius: 20px;
+  }
+
+  .modal-header {
+    padding: 14px 16px;
+  }
+
+  .modal-header h2 {
+    font-size: 1.15rem;
+  }
+
+  .modal-body {
+    padding: 16px 12px;
+  }
+
+  .settings-tabs-bar {
+    padding: 0 6px;
+  }
+
+  .settings-tab-btn {
+    padding: 10px 10px;
+    font-size: 0.78rem;
+  }
+
+  .settings-user-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .theme-switcher-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  /* Floating Toast Notifications on Mobile */
+  .admin-floating-toast {
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    max-width: none;
+    padding: 10px 14px;
+    font-size: 0.8rem;
+    flex-wrap: wrap;
+    border-radius: 12px;
+  }
+
+  .toast-action-btn {
+    font-size: 0.72rem;
+    padding: 3px 8px;
+  }
+}
+
+/* 4. ULTRA-SMALL SCREENS (<= 380px) */
+@media (max-width: 380px) {
+  .logo-text h1 {
+    font-size: 0.98rem;
+  }
+  .stat-card {
+    padding: 8px 6px;
+  }
+  .stat-card h3 {
+    font-size: 1.25rem;
+  }
+  .stat-card span {
+    font-size: 0.68rem;
+  }
+  .stat-card i {
+    font-size: 1.1rem;
+  }
+}
+
