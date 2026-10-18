@@ -530,6 +530,41 @@ body.compact-view .complaint-item { padding: 10px 14px; margin-bottom: 10px; }
   padding: 2px 6px;
   border-radius: 6px;
 }
+
+.complaint-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.card-delete-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: #ef4444;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.82rem;
+  padding: 0;
+}
+.card-delete-btn:hover {
+  background: #fee2e2;
+  color: #dc2626;
+  border-color: #fca5a5;
+  transform: scale(1.1);
+}
+body.dark-theme .card-delete-btn:hover {
+  background: #450a0a;
+  color: #fca5a5;
+  border-color: #7f1d1d;
+}
+
 .complaint-meta {
   font-size: 0.75rem;
   color: var(--text-sub);
@@ -1637,9 +1672,19 @@ footer {
   }
 
   .complaint-header {
-    flex-direction: column;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     align-items: flex-start;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .complaint-header-actions {
+    display: flex;
+    align-items: center;
     gap: 6px;
+    flex-shrink: 0;
   }
 
   .complaint-title-group {

@@ -21,6 +21,20 @@ export default function StudentDashboard({ user }) {
     }
   };
 
+  const handleDelete = async (c) => {
+    const confirm = window.confirm(`Are you sure you want to delete "${c.title}"? This cannot be undone.`);
+    if (!confirm) return;
+    try {
+      await complaints.delete(c._id);
+      setList(prev => prev.filter(item => item._id !== c._id));
+      setSubmitFeedback({ type: 'success', msg: `Complaint #${c._id.slice(-6)} deleted successfully!` });
+      setTimeout(() => setSubmitFeedback({ type: '', msg: '' }), 4000);
+      load();
+    } catch (err) {
+      alert('Error deleting complaint: ' + err.message);
+    }
+  };
+
   useEffect(() => { load(); }, []);
 
   const handleFileChange = (e) => {
@@ -304,12 +318,22 @@ export default function StudentDashboard({ user }) {
                   <span className="ticket-tag">#{c._id.slice(-6)}</span>
                   <strong>{c.title}</strong>
                 </div>
-                <span className={`status-badge status-${c.status.toLowerCase().replace(/ /g, '-')}`}>
-                  {c.status === 'Pending' && <i className="fas fa-clock"></i>}
-                  {c.status === 'In Progress' && <i className="fas fa-tools"></i>}
-                  {c.status === 'Resolved' && <i className="fas fa-check-circle"></i>}
-                  {' '}{c.status}
-                </span>
+                <div className="complaint-header-actions">
+                  <span className={`status-badge status-${c.status.toLowerCase().replace(/ /g, '-')}`}>
+                    {c.status === 'Pending' && <i className="fas fa-clock"></i>}
+                    {c.status === 'In Progress' && <i className="fas fa-tools"></i>}
+                    {c.status === 'Resolved' && <i className="fas fa-check-circle"></i>}
+                    {' '}{c.status}
+                  </span>
+                  <button
+                    type="button"
+                    className="card-delete-btn"
+                    onClick={() => handleDelete(c)}
+                    title="Delete this complaint"
+                  >
+                    <i className="fas fa-trash-alt"></i>
+                  </button>
+                </div>
               </div>
 
               <div className="complaint-meta">

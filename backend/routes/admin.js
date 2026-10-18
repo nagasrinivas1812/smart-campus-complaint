@@ -218,4 +218,40 @@ router.get('/users', async (req, res) => {
     }
 });
 
+// @route   DELETE /api/admin/complaints/:id
+// @desc    Delete any complaint (Admin only)
+// @access  Private (Admin only)
+router.delete('/complaints/:id', async (req, res) => {
+    try {
+        const complaint = await Complaint.findById(req.params.id);
+
+        if (!complaint) {
+            return res.status(404).json({
+                success: false,
+                message: 'Complaint not found',
+            });
+        }
+
+        await complaint.deleteOne();
+
+        // Emit real-time socket events
+        try {
+            const io = req.app.get('io');
+            if (io) {
+                io.emit('complaintDeleted', { id: req.params.id });
+            }
+        } catch (socketErr) {
+            console.error('Socket error:', socketErr.message);
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Complaint deleted successfully by admin',
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
 module.exports = router;

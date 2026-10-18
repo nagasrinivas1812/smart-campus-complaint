@@ -162,8 +162,8 @@ router.put('/:id', protect, async (req, res) => {
 });
 
 // @route   DELETE /api/complaints/:id
-// @desc    Delete complaint (student can delete only pending ones)
-// @access  Private (Student)
+// @desc    Delete complaint (Student can delete own; Admin can delete any)
+// @access  Private
 router.delete('/:id', protect, async (req, res) => {
     try {
         const complaint = await Complaint.findById(req.params.id);
@@ -175,23 +175,25 @@ router.delete('/:id', protect, async (req, res) => {
             });
         }
 
-        // Check ownership
-        if (complaint.student.toString() !== req.user.id) {
+        // Check ownership: students can delete their own; admins can delete any
+        if (req.user.role !== 'admin' && complaint.student.toString() !== req.user.id) {
             return res.status(403).json({
                 success: false,
                 message: 'Not authorized to delete this complaint',
             });
         }
 
-        // Only allow delete if complaint is still pending
-        if (complaint.status !== 'Pending') {
-            return res.status(400).json({
-                success: false,
-                message: 'Cannot delete complaint that is already In Progress or Resolved',
-            });
-        }
-
         await complaint.deleteOne();
+
+        // Emit real-time socket events
+        try {
+            const io = req.app.get('io');
+            if (io) {
+                io.emit('complaintDeleted', { id: req.params.id });
+            }
+        } catch (socketErr) {
+            console.error('Socket error:', socketErr.message);
+        }
 
         res.status(200).json({
             success: true,

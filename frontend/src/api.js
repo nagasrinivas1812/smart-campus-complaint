@@ -49,9 +49,11 @@ export const auth = {
 export const complaints = {
   my: () => request('/complaints/my'),
   create: (body) => request('/complaints', { method: 'POST', body: JSON.stringify(body) }),
+  delete: (id) => request(`/complaints/${id}`, { method: 'DELETE' }),
 };
 
 export const admin = {
   complaints: () => request('/admin/complaints'),
   updateStatus: (id, body) => request(`/admin/complaints/${id}/status`, { method: 'PUT', body: JSON.stringify(body) }),
+  deleteComplaint: (id) => request(`/admin/complaints/${id}`, { method: 'DELETE' }),
 };

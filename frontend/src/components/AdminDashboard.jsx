@@ -147,6 +147,18 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleDelete = async (c) => {
+    const confirm = window.confirm(`Are you sure you want to delete task #${c._id.slice(-6)}: "${c.title}"? This action cannot be undone.`);
+    if (!confirm) return;
+    try {
+      await admin.deleteComplaint(c._id);
+      showToast(`Task #${c._id.slice(-6)} deleted successfully!`, 'success');
+      await load();
+    } catch (err) {
+      showToast('Error deleting task: ' + err.message, 'error');
+    }
+  };
+
   const formatDate = (d) => d ? new Date(d).toLocaleString() : 'Just now';
 
   // Counts for tabs
@@ -292,12 +304,22 @@ export default function AdminDashboard() {
                   <span className="ticket-tag">#{c._id.slice(-6)}</span>
                   <strong>{c.title}</strong>
                 </div>
-                <span className={`status-badge status-${c.status.toLowerCase().replace(/ /g, '-')}`}>
-                  {c.status === 'Pending' && <i className="fas fa-clock"></i>}
-                  {c.status === 'In Progress' && <i className="fas fa-tools"></i>}
-                  {c.status === 'Resolved' && <i className="fas fa-check-circle"></i>}
-                  {' '}{c.status}
-                </span>
+                <div className="complaint-header-actions">
+                  <span className={`status-badge status-${c.status.toLowerCase().replace(/ /g, '-')}`}>
+                    {c.status === 'Pending' && <i className="fas fa-clock"></i>}
+                    {c.status === 'In Progress' && <i className="fas fa-tools"></i>}
+                    {c.status === 'Resolved' && <i className="fas fa-check-circle"></i>}
+                    {' '}{c.status}
+                  </span>
+                  <button
+                    type="button"
+                    className="card-delete-btn"
+                    onClick={() => handleDelete(c)}
+                    title="Delete this task"
+                  >
+                    <i className="fas fa-trash-alt"></i>
+                  </button>
+                </div>
               </div>
 
               <div className="complaint-meta">
