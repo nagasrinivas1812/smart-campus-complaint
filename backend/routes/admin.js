@@ -108,6 +108,23 @@ router.put(
 
             console.log(`Notification: Complaint ${complaint.id} status changed from ${oldStatus} to ${newStatus}`);
 
+            // Emit real-time socket events if socket.io is configured
+            try {
+                const io = req.app.get('io');
+                if (io) {
+                    io.emit('complaintUpdated', complaint);
+                    if (complaint.student) {
+                        io.to(`user_${complaint.student}`).emit('statusUpdate', {
+                            complaintId: complaint._id,
+                            status: newStatus,
+                            remark: remark,
+                        });
+                    }
+                }
+            } catch (socketErr) {
+                console.error('Socket notification error (non-fatal):', socketErr.message);
+            }
+
             res.status(200).json({
                 success: true,
                 data: complaint,

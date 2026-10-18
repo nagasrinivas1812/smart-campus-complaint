@@ -21,6 +21,19 @@ const ComplaintSchema = new mongoose.Schema({
         type: String,
         default: '',
     },
+    mediaUrl: {
+        type: String,
+        default: '',
+    },
+    mediaType: {
+        type: String,
+        enum: ['image', 'video', 'none', ''],
+        default: 'none',
+    },
+    mediaName: {
+        type: String,
+        default: '',
+    },
     status: {
         type: String,
         enum: ['Pending', 'In Progress', 'Resolved'],

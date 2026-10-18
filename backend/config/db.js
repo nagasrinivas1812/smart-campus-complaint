@@ -17,6 +17,9 @@ const connectDB = async () => {
         const conn = await mongoose.connect(uri);
         console.log(`📡 MongoDB Connected (In-Memory): ${conn.connection.host}`);
         console.log('⚠️  Data will be lost when the server stops. For persistent data, install MongoDB locally.');
+
+        const seedDemoData = require('./seed');
+        await seedDemoData();
     } catch (error) {
         console.error(`❌ Database Connection Error: ${error.message}`);
         process.exit(1);

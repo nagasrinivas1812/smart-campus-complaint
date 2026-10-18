@@ -41,7 +41,15 @@ router.post(
                 });
             }
 
-            // Create user
+            // Prevent admin registration
+            if (req.body.role === 'admin') {
+                return res.status(403).json({
+                    success: false,
+                    message: 'Admin registration is disabled. There can only be one administrator.',
+                });
+            }
+
+            // Create user (strictly student)
             user = await User.create({
                 name,
                 email,
@@ -49,7 +57,7 @@ router.post(
                 rollNumber,
                 department,
                 phone,
-                role: req.body.role === 'admin' ? 'admin' : 'student',
+                role: 'student',
             });
 
             const token = generateToken(user._id);
@@ -86,7 +94,7 @@ router.post(
             return res.status(400).json({ success: false, errors: errors.array() });
         }
 
-        const { email, password } = req.body;
+        const { email, password, role } = req.body;
 
         try {
             // Check for user
@@ -106,6 +114,16 @@ router.post(
                 return res.status(401).json({
                     success: false,
                     message: 'Invalid credentials',
+                });
+            }
+
+            // Verify role matches requested login portal
+            if (role && user.role !== role) {
+                return res.status(403).json({
+                    success: false,
+                    message: role === 'admin'
+                        ? 'Access denied: Student accounts cannot log in through the Admin portal.'
+                        : 'Access denied: Administrator accounts must log in through Admin Login.',
                 });
             }
 
@@ -149,6 +167,81 @@ router.get('/me', protect, async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
+// @route   PUT /api/auth/profile
+// @desc    Update user profile
+// @access  Private
+router.put('/profile', protect, async (req, res) => {
+    try {
+        const { name, phone, department, rollNumber } = req.body;
+        const user = await User.findById(req.user.id);
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        if (name) user.name = name.trim();
+        if (phone !== undefined) user.phone = phone.trim();
+        if (department !== undefined) user.department = department.trim();
+        if (rollNumber !== undefined && user.role === 'student') user.rollNumber = rollNumber.trim();
+
+        await user.save();
+
+        res.status(200).json({
+            success: true,
+            message: 'Profile updated successfully',
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                rollNumber: user.rollNumber,
+                department: user.department,
+                phone: user.phone,
+            },
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: 'Server error updating profile' });
+    }
+});
+
+// @route   PUT /api/auth/password
+// @desc    Change password
+// @access  Private
+router.put('/password', protect, async (req, res) => {
+    try {
+        const { currentPassword, newPassword } = req.body;
+
+        if (!currentPassword || !newPassword) {
+            return res.status(400).json({ success: false, message: 'Current password and new password are required' });
+        }
+
+        if (newPassword.length < 6) {
+            return res.status(400).json({ success: false, message: 'New password must be at least 6 characters' });
+        }
+
+        const user = await User.findById(req.user.id).select('+password');
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        const isMatch = await user.matchPassword(currentPassword);
+        if (!isMatch) {
+            return res.status(401).json({ success: false, message: 'Incorrect current password' });
+        }
+
+        user.password = newPassword;
+        await user.save();
+
+        res.status(200).json({
+            success: true,
+            message: 'Password changed successfully',
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: 'Server error updating password' });
     }
 });
 
