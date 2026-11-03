@@ -179,7 +179,8 @@ router.get('/analytics', async (req, res) => {
         }
 
         const totalStudents = await User.countDocuments({ role: 'student' });
-        const activeStudents = await Complaint.distinct('student').countDocuments();
+        const activeStudentsList = await Complaint.distinct('student');
+        const activeStudents = Array.isArray(activeStudentsList) ? activeStudentsList.length : 0;
         const totalComplaints = await Complaint.countDocuments();
         const resolvedCount = await Complaint.countDocuments({ status: 'Resolved' });
         const resolvedRate = totalComplaints > 0 ? (resolvedCount / totalComplaints * 100).toFixed(1) : 0;
@@ -192,6 +193,8 @@ router.get('/analytics', async (req, res) => {
                 totalStudents,
                 activeStudents,
                 resolvedRate,
+                totalComplaints,
+                resolvedCount,
             },
         });
     } catch (err) {

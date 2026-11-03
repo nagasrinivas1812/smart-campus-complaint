@@ -19,7 +19,7 @@ export default function Header({ user, onLogout, theme, onToggleTheme, onOpenSet
       <div className="logo-area">
         <div className="school-logo"><i className="fas fa-school"></i></div>
         <div className="logo-text">
-          <h1>CampusCare | Complaint Hub</h1>
+          <h1>SMART-CAMPUS-Complaint</h1>
           <p>Report. Track. Resolve.</p>
         </div>
       </div>
