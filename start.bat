@@ -18,7 +18,8 @@ start "Smart Campus Frontend" cmd /k "cd /d "%~dp0frontend" && npm run dev"
 
 echo.
 echo Both servers started!
-echo Frontend: http://localhost:5173
-echo Backend:  http://localhost:5000
+echo Opening browser to http://localhost:5173 ...
+timeout /t 2 >nul
+start http://localhost:5173
 echo ==============================================
 
